@@ -9,4 +9,4 @@ module.exports = function() {
 			configFile: 'karma.conf.js',
 			action: 'watch'
 		}));
-}
+};

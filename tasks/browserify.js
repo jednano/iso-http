@@ -14,4 +14,4 @@ module.exports = function() {
 		.pipe(streamify(uglify()))
 		.pipe(rename('iso-http.min.js'))
 		.pipe(gulp.dest('dist'));
-}
+};

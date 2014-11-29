@@ -5,4 +5,4 @@ module.exports = function() {
 	gulp.task('clean', function(done) {
 		del(['js', 'd.ts'], done);
 	});
-}
+};

@@ -19,7 +19,7 @@ module.exports = function() {
 			.pipe(istanbulIgnoreTypeScriptExtend())
 			.pipe(gulp.dest('js'))
 	);
-}
+};
 
 var project = ts.createProject({
 	target: 'es5',

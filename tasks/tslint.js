@@ -7,4 +7,4 @@ module.exports = function() {
 		.pipe(tslint.report('prose', {
 			emitError: false
 		}));
-}
+};
