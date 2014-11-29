@@ -1,0 +1,12 @@
+{
+  "name": "dt-jasmine",
+  "version": "2.0.0",
+  "homepage": "https://github.com/jedmao/dt-jasmine",
+  "description": "TypeScript Definitions for Jasmine from DefinitelyTyped",
+  "keywords": [
+    "jasmine",
+    "typescript",
+    "definition",
+    "DefinitelyTyped"
+  ]
+}

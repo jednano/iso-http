@@ -1,0 +1,19 @@
+language: node_js
+
+node_js:
+  - '0.10'
+
+sudo: false
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+
+after_success:
+  - npm install -g codeclimate-test-reporter
+  - cat coverage/lcov.info | codeclimate
+
+addons:
+  code_climate:
+    repo_token: f159eec3f70f0484d592e32cd87160b251249591a1f8007bea22ac4b819ffe45

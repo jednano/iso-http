@@ -1,0 +1,22 @@
+{
+  "name": "dt-jasmine",
+  "version": "2.0.0",
+  "homepage": "https://github.com/jedmao/dt-jasmine",
+  "description": "TypeScript Definitions for Jasmine from DefinitelyTyped",
+  "keywords": [
+    "jasmine",
+    "typescript",
+    "definition",
+    "DefinitelyTyped"
+  ],
+  "_release": "2.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.0.0",
+    "commit": "1ceffd8cfd9cd41798ef54ebe8896157b671ddd1"
+  },
+  "_source": "git://github.com/jedmao/dt-jasmine.git",
+  "_target": "~2.0.0",
+  "_originalSource": "dt-jasmine",
+  "_direct": true
+}
