@@ -26,6 +26,7 @@
     "tests"
   ],
   "devDependencies": {
-    "dt-jasmine": "~2.0.0"
+    "dt-jasmine": "~2.0.0",
+    "dt-node": "https://github.com/jedmao/dt-node.git#~0.11.13"
   }
 }

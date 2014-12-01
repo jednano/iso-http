@@ -10,12 +10,12 @@ module.exports = function(config) {
 
 		// frameworks to use
 		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-		frameworks: ['jasmine'],
+		frameworks: ['browserify', 'jasmine'],
 
 
 		// list of files / patterns to load in the browser
 		files: [
-			'js/lib/**/*.spec.js'
+			'js/**/*.browser.spec.js'
 		],
 
 
@@ -27,6 +27,7 @@ module.exports = function(config) {
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
+			'js/**/*.browser.spec.js': ['browserify']
 		},
 
 
@@ -55,14 +56,21 @@ module.exports = function(config) {
 
 		// start these browsers
 		// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-		browsers: [
-			'PhantomJS'
-//			'Chrome',
-//			'Firefox',
-//			'Safari',
-//			'Opera',
-//			'IE'
+		browsers: process.env.TRAVIS ? ['Chrome_travis_ci', 'Firefox'] : [
+			'Chrome',
+			'ChromeCanary',
+			'Firefox',
+			'Safari',
+			'IE'
 		],
+
+
+		customLaunchers: {
+			Chrome_travis_ci: {
+				base: 'Chrome',
+				flags: ['--no-sandbox']
+			}
+		},
 
 
 		// Continuous Integration mode

@@ -7,7 +7,7 @@ var uglify = require('gulp-uglify');
 
 module.exports = function() {
 	return browserify()
-		.require('./js/http.browser.js', { expose: 'iso-http' })
+		.require('./js/BrowserHttp.js', { expose: 'iso-http' })
 		.bundle()
 		.pipe(source('iso-http.js'))
 		.pipe(gulp.dest('dist'))
