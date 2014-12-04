@@ -1,14 +1,22 @@
 /// <reference path="../bower_components/dt-jasmine/jasmine.d.ts" />
 var TestHelpers = require('./TestHelpers');
 function runIsomorphicTests(request) {
-    it('handles a 200', function (done) {
-        var options = {
-            url: TestHelpers.getApiPath('/foo')
-        };
-        request(options, function (response) {
-            expect(response.status).toEqual(200);
-            expect(response.text).toEqual('bar');
-            done();
+    var statusCodes = {
+        200: 'foo',
+        500: 'fail',
+        404: 'Cannot GET /404\n'
+    };
+    Object.keys(statusCodes).forEach(function (statusCode) {
+        var status = parseInt(statusCode, 10);
+        it('handles a ' + status, function (done) {
+            var options = {
+                url: TestHelpers.getApiPath('/' + status)
+            };
+            request(options, function (response) {
+                expect(response.status).toEqual(status);
+                expect(response.text).toEqual(statusCodes[status]);
+                done();
+            });
         });
     });
     it('handles a 200 w/o a resolve callback', function () {
@@ -19,25 +27,6 @@ function runIsomorphicTests(request) {
             request(options);
         };
         expect(fn).not.toThrowError();
-    });
-    it('handles a 500', function (done) {
-        var options = {
-            url: TestHelpers.getApiPath('/error')
-        };
-        request(options, function (response) {
-            expect(response.status).toEqual(500);
-            expect(response.text).toEqual('fail');
-            done();
-        });
-    });
-    it('handles a 404', function (done) {
-        var options = {
-            url: TestHelpers.getApiPath('/not-found')
-        };
-        request(options, function (response) {
-            expect(response.status).toEqual(404);
-            done();
-        });
     });
     it('responds with headers as an object literal', function (done) {
         var options = {
@@ -60,5 +49,4 @@ function runIsomorphicTests(request) {
         });
     });
 }
-;
 module.exports = runIsomorphicTests;

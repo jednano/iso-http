@@ -5,14 +5,22 @@ import TestHelpers = require('./TestHelpers');
 
 function runIsomorphicTests(request: IsoHttp.Request) {
 
-	it('handles a 200', done => {
-		var options = {
-			url: TestHelpers.getApiPath('/foo')
-		};
-		request(options, response => {
-			expect(response.status).toEqual(200);
-			expect(response.text).toEqual('bar');
-			done();
+	var statusCodes = {
+		200: 'foo',
+		500: 'fail',
+		404: 'Cannot GET /404\n'
+	};
+	Object.keys(statusCodes).forEach(statusCode => {
+		var status = parseInt(statusCode, 10);
+		it('handles a ' + status, done => {
+			var options = {
+				url: TestHelpers.getApiPath('/' + status)
+			};
+			request(options, response => {
+				expect(response.status).toEqual(status);
+				expect(response.text).toEqual(statusCodes[status]);
+				done();
+			});
 		});
 	});
 
@@ -24,27 +32,6 @@ function runIsomorphicTests(request: IsoHttp.Request) {
 			request(options);
 		};
 		expect(fn).not.toThrowError();
-	});
-
-	it('handles a 500', done => {
-		var options = {
-			url: TestHelpers.getApiPath('/error')
-		};
-		request(options, response => {
-			expect(response.status).toEqual(500);
-			expect(response.text).toEqual('fail');
-			done();
-		});
-	});
-
-	it('handles a 404', done => {
-		var options = {
-			url: TestHelpers.getApiPath('/not-found')
-		};
-		request(options, response => {
-			expect(response.status).toEqual(404);
-			done();
-		});
 	});
 
 	it('responds with headers as an object literal', done => {
@@ -69,6 +56,6 @@ function runIsomorphicTests(request: IsoHttp.Request) {
 		});
 	});
 
-};
+}
 
 export = runIsomorphicTests;

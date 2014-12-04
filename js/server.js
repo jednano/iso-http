@@ -4,10 +4,10 @@ var express = require('express');
 var app = express();
 app.set('json spaces', 0);
 app.use(cors());
-app.get('/foo', function (request, response) {
-    response.status(200).send('bar');
+app.get('/200', function (request, response) {
+    response.status(200).send('foo');
 });
-app.get('/error', function (request, response) {
+app.get('/500', function (request, response) {
     response.status(500).send('fail');
 });
 var server = app.listen(3000, function () {

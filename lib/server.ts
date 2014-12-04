@@ -8,11 +8,11 @@ app.set('json spaces', 0);
 
 app.use(cors());
 
-app.get('/foo', (request, response) => {
-	response.status(200).send('bar');
+app.get('/200', (request, response) => {
+	response.status(200).send('foo');
 });
 
-app.get('/error', (request, response) => {
+app.get('/500', (request, response) => {
 	response.status(500).send('fail');
 });
 
