@@ -1,8 +1,8 @@
-﻿import Helpers = require('./Helpers');
-import IsoHttp = require('./IsoHttp');
-import Types = require('./Types');
+﻿import Helpers = require('../Helpers');
+import IsoHttp = require('../IsoHttp');
+import Types = require('../Types');
 
-module BrowserHttp {
+module Http {
 
 	export function request(
 		options: IsoHttp.RequestOptions,
@@ -81,4 +81,4 @@ module BrowserHttp {
 
 }
 
-export = BrowserHttp;
+export = Http;

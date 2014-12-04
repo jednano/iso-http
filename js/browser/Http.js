@@ -5,14 +5,14 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var Helpers = require('./Helpers');
-var IsoHttp = require('./IsoHttp');
-var BrowserHttp;
-(function (BrowserHttp) {
+var Helpers = require('../Helpers');
+var IsoHttp = require('../IsoHttp');
+var Http;
+(function (Http) {
     function request(options, resolve, reject) {
         new Agent(options).send(resolve, reject);
     }
-    BrowserHttp.request = request;
+    Http.request = request;
     var Agent = (function (_super) {
         __extends(Agent, _super);
         function Agent(options) {
@@ -76,6 +76,6 @@ var BrowserHttp;
         };
         return Agent;
     })(IsoHttp.Agent);
-    BrowserHttp.Agent = Agent;
-})(BrowserHttp || (BrowserHttp = {}));
-module.exports = BrowserHttp;
+    Http.Agent = Agent;
+})(Http || (Http = {}));
+module.exports = Http;

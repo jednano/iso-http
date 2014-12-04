@@ -1,6 +1,6 @@
 /// <reference path="../bower_components/dt-jasmine/jasmine.d.ts" />
 var FakeHttp = require('./FakeHttp');
-var TestHelpers = require('./TestHelpers');
+var TestUtils = require('./TestUtils');
 describe('FakeHttp.request()', function () {
     var request = FakeHttp.request;
     var options = {
@@ -23,7 +23,7 @@ describe('FakeHttp.request()', function () {
         req.respondWith(fakeResponse);
     });
     it('fakes a client-rejected HTTP request with rejectWith', function () {
-        var req = request(options, TestHelpers.noop, function (err) {
+        var req = request(options, TestUtils.noop, function (err) {
             expect(err.method).toEqual('FOO');
             expect(err.url).toEqual('bar');
             expect(err.message).toEqual('baz');

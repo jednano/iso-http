@@ -2,7 +2,7 @@
 
 import FakeHttp = require('./FakeHttp');
 import IsoHttp = require('./IsoHttp');
-import TestHelpers = require('./TestHelpers');
+import TestUtils = require('./TestUtils');
 
 describe('FakeHttp.request()', () => {
 
@@ -30,7 +30,7 @@ describe('FakeHttp.request()', () => {
 	});
 
 	it('fakes a client-rejected HTTP request with rejectWith', () => {
-		var req = request(options, TestHelpers.noop, err => {
+		var req = request(options, TestUtils.noop, err => {
 			expect(err.method).toEqual('FOO');
 			expect(err.url).toEqual('bar');
 			expect(err.message).toEqual('baz');

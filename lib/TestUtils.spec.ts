@@ -1,12 +1,12 @@
 ﻿/// <reference path="../bower_components/dt-jasmine/jasmine.d.ts" />
 
-import TestHelpers = require('./TestHelpers');
+import TestUtils = require('./TestUtils');
 
-describe('TestHelpers', () => {
+describe('TestUtils', () => {
 
 	describe('getApiPath()', () => {
 
-		var getApiPath = TestHelpers.getApiPath;
+		var getApiPath = TestUtils.getApiPath;
 
 		it('prepends a string with http://localhost:3000', () => {
 			expect(getApiPath('/foo')).toEqual('http://localhost:3000/foo');
@@ -16,7 +16,7 @@ describe('TestHelpers', () => {
 
 	describe('isPlainObject()', () => {
 
-		var isPlainObject = TestHelpers.isPlainObject;
+		var isPlainObject = TestUtils.isPlainObject;
 
 		it('validates an object literal', () => {
 			expect(isPlainObject({})).toBe(true);

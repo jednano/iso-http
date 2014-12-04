@@ -1,4 +1,4 @@
-/// <reference path="../bower_components/dt-node/node.d.ts" />
+/// <reference path="../../bower_components/dt-node/node.d.ts" />
 /* istanbul ignore next: TypeScript extend */
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -6,15 +6,15 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var IsoHttp = require('./IsoHttp');
+var IsoHttp = require('../IsoHttp');
 var http = require('http');
 var url = require('url');
-var NodeHttp;
-(function (NodeHttp) {
+var Http;
+(function (Http) {
     function request(options, resolve, reject) {
         new Agent(options).send(resolve, reject);
     }
-    NodeHttp.request = request;
+    Http.request = request;
     var Agent = (function (_super) {
         __extends(Agent, _super);
         function Agent() {
@@ -56,6 +56,6 @@ var NodeHttp;
         };
         return Agent;
     })(IsoHttp.Agent);
-    NodeHttp.Agent = Agent;
-})(NodeHttp || (NodeHttp = {}));
-module.exports = NodeHttp;
+    Http.Agent = Agent;
+})(Http || (Http = {}));
+module.exports = Http;

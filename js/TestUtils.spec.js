@@ -1,14 +1,14 @@
 /// <reference path="../bower_components/dt-jasmine/jasmine.d.ts" />
-var TestHelpers = require('./TestHelpers');
-describe('TestHelpers', function () {
+var TestUtils = require('./TestUtils');
+describe('TestUtils', function () {
     describe('getApiPath()', function () {
-        var getApiPath = TestHelpers.getApiPath;
+        var getApiPath = TestUtils.getApiPath;
         it('prepends a string with http://localhost:3000', function () {
             expect(getApiPath('/foo')).toEqual('http://localhost:3000/foo');
         });
     });
     describe('isPlainObject()', function () {
-        var isPlainObject = TestHelpers.isPlainObject;
+        var isPlainObject = TestUtils.isPlainObject;
         it('validates an object literal', function () {
             expect(isPlainObject({})).toBe(true);
         });

@@ -1,11 +1,11 @@
-﻿/// <reference path="../bower_components/dt-node/node.d.ts" />
+﻿/// <reference path="../../bower_components/dt-node/node.d.ts" />
 /* istanbul ignore next: TypeScript extend */
 
-import IsoHttp = require('./IsoHttp');
+import IsoHttp = require('../IsoHttp');
 import http = require('http');
 import url = require('url');
 
-module NodeHttp {
+module Http {
 
 	export function request(
 		options: IsoHttp.RequestOptions,
@@ -54,4 +54,4 @@ module NodeHttp {
 
 }
 
-export = NodeHttp;
+export = Http;
