@@ -7,7 +7,7 @@ var plumber = require('gulp-plumber');
 
 module.exports = function(done) {
 
-	var server = require('../js/server');
+	var server = require('../js/test/api-server');
 	runNodeTests(function(exitCode1) {
 		runBrowserTests(function(exitCode2) {
 			server.close();
@@ -22,10 +22,18 @@ module.exports = function(done) {
 
 function runNodeTests(done) {
 	var errorCount = 0;
-	gulp.src(['js/**/*.js', '!js/browser/Http.js', '!js/**/*.spec.js'])
+	gulp.src([
+			'js/**/*.js',
+			'!js/**/*.spec.js',
+			'!js/browser/**/*.js',
+			'!js/test/**/*.js'
+		])
 		.pipe(istanbul())
 		.on('finish', function() {
-			gulp.src(['js/**/*.spec.js', '!js/browser/Http.spec.js'])
+			gulp.src([
+					'js/**/*.spec.js',
+					'!js/browser/**/*.spec.js'
+				])
 				.on('error', function() {
 					errorCount++;
 				})
