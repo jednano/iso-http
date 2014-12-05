@@ -1,3 +1,6 @@
+d.ts/**/*.spec.d.ts
+d.ts/test/
+
 # Logs
 logs
 *.log

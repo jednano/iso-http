@@ -2,10 +2,11 @@
 *.sln*
 *.suo
 bower.json
-./defaults*.json
 gulpfile.js
 tslint.json
 coverage/
+d.ts/**/*.spec.d.ts
+d.ts/test/
 js/**/*.spec.js
 lib/
 tasks/
