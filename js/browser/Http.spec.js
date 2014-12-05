@@ -1,8 +1,8 @@
 /// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
-var http = require('iso-http');
-var TestUtils = require('TestUtils');
+var Http = require('./Http');
+var TestUtils = require('../test/TestUtils');
 describe('BrowserHttp.request()', function () {
-    var request = http.request;
+    var request = Http.request;
     TestUtils.runIsomorphicTests(request);
     it('rejects a client error', function (done) {
         var options = {

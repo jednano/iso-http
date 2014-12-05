@@ -1,11 +1,11 @@
 ﻿/// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
 
-var http = require('iso-http');
-var TestUtils = require('TestUtils');
+import Http = require('./Http');
+import TestUtils = require('../test/TestUtils');
 
 describe('BrowserHttp.request()', () => {
 
-	var request = http.request;
+	var request = Http.request;
 
 	TestUtils.runIsomorphicTests(request);
 

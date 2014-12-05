@@ -10,14 +10,15 @@ module.exports = function(config) {
 
 		// frameworks to use
 		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-		frameworks: ['jasmine'],
+		frameworks: ['jasmine', 'commonjs'],
 
 
 		// list of files / patterns to load in the browser
 		files: [
-			'dist/iso-http.js',
-			'dist/test-utils.js',
-			'js/browser/Http.spec.js'
+			'js/Helpers.js',
+			'js/IsoHttp.js',
+			'js/browser/*.js',
+			'js/test/TestUtils.js'
 		],
 
 
@@ -29,7 +30,8 @@ module.exports = function(config) {
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			'dist/iso-http.js': ['coverage']
+			'js/**/*.js': ['commonjs'],
+			'js/browser/Http.js': ['coverage']
 		},
 
 
