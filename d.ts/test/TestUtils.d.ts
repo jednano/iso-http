@@ -1,4 +1,4 @@
-import IsoHttp = require('./IsoHttp');
+import IsoHttp = require('../IsoHttp');
 declare module TestUtils {
     function getApiPath(path: string): string;
     function isPlainObject(obj: Object): boolean;

@@ -1,4 +1,4 @@
-﻿/// <reference path="../bower_components/dt-jasmine/jasmine.d.ts" />
+﻿/// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
 
 import TestUtils = require('./TestUtils');
 
@@ -33,7 +33,7 @@ describe('TestUtils', () => {
 			expect(isPlainObject(42)).toBe(false);
 			/* istanbul ignore next: function not covered */
 			expect(isPlainObject(() => {
-				// noop
+				return;
 			})).toBe(false);
 		});
 

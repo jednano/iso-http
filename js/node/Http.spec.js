@@ -1,7 +1,7 @@
 /// <reference path="../../bower_components/dt-node/node.d.ts" />
 /// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
 var Http = require('./Http');
-var TestUtils = require('../TestUtils');
+var TestUtils = require('../test/TestUtils');
 describe('NodeHttp.request()', function () {
     var request = Http.request;
     TestUtils.runIsomorphicTests(request);

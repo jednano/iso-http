@@ -1,6 +1,6 @@
 /// <reference path="../bower_components/dt-jasmine/jasmine.d.ts" />
 var FakeHttp = require('./FakeHttp');
-var TestUtils = require('./TestUtils');
+var TestUtils = require('./test/TestUtils');
 describe('FakeHttp.request()', function () {
     var request = FakeHttp.request;
     var options = {

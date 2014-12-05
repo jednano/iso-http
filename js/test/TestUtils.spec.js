@@ -1,4 +1,4 @@
-/// <reference path="../bower_components/dt-jasmine/jasmine.d.ts" />
+/// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
 var TestUtils = require('./TestUtils');
 describe('TestUtils', function () {
     describe('getApiPath()', function () {
@@ -22,7 +22,7 @@ describe('TestUtils', function () {
             expect(isPlainObject(42)).toBe(false);
             /* istanbul ignore next: function not covered */
             expect(isPlainObject(function () {
-                // noop
+                return;
             })).toBe(false);
         });
     });

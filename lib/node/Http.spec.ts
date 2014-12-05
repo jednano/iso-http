@@ -2,7 +2,7 @@
 /// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
 
 import Http = require('./Http');
-import TestUtils = require('../TestUtils');
+import TestUtils = require('../test/TestUtils');
 
 describe('NodeHttp.request()', () => {
 

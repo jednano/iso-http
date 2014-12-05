@@ -18,7 +18,7 @@ module.exports = function() {
 		.pipe(gulp.dest('dist'));
 
 	var testUtils = browserify()
-		.require('./js/TestUtils.js', { expose: 'TestUtils' })
+		.require('./js/test/TestUtils.js', { expose: 'TestUtils' })
 		.bundle()
 		.pipe(source('test-utils.js'))
 		.pipe(gulp.dest('dist'));

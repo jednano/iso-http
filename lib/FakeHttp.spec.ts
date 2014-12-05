@@ -2,7 +2,7 @@
 
 import FakeHttp = require('./FakeHttp');
 import IsoHttp = require('./IsoHttp');
-import TestUtils = require('./TestUtils');
+import TestUtils = require('./test/TestUtils');
 
 describe('FakeHttp.request()', () => {
 

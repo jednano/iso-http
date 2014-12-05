@@ -1,4 +1,4 @@
-﻿import IsoHttp = require('./IsoHttp');
+﻿import IsoHttp = require('../IsoHttp');
 
 module TestUtils {
 

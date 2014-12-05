@@ -1,7 +1,7 @@
 ﻿/// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
 
 var http = require('iso-http');
-import TestUtils = require('TestUtils');
+var TestUtils = require('TestUtils');
 
 describe('BrowserHttp.request()', () => {
 
