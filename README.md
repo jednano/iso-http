@@ -22,7 +22,7 @@ An isomorphic HTTP request library.
 
 ### Isomorphic
 
-With iso-http, the only thing different between Node and in-browser is the installation. This means you can use iso-http in your [isomorphic](https://www.google.com/search?q=isomoprhic%20javascript) applications in the most consistent way. In Node, the built-in [http module](http://nodejs.org/api/http.html) is utilized. In the browser, the [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) is used without any reference to Node libraries. This keeps the footprint light.
+With iso-http, the only thing different between Node and in-browser is the installation. This means you can use iso-http in your [isomorphic](https://www.google.com/search?q=isomoprhic%20javascript) applications in the most consistent way. In Node, the built-in [http module](http://nodejs.org/api/http.html#http_http_request_options_callback) is utilized. In the browser, the [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) is used without any reference to Node libraries. This keeps the footprint light.
 
 
 #### Node installation
