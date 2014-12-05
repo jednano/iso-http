@@ -6,7 +6,7 @@
     "Jed Mao <jedmao@outlook.com>"
   ],
   "description": "An isomorphic HTTP request library.",
-  "main": "js/lib/http.js",
+  "main": "dist/iso-http.js",
   "moduleType": [
     "node"
   ],
@@ -21,9 +21,7 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "bower_components"
   ],
   "devDependencies": {
     "dt-jasmine": "~2.0.0",
