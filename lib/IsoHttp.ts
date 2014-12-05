@@ -69,7 +69,7 @@ module IsoHttp {
 	}
 
 	export interface Response {
-		headers: Types.HashTable<string>;
+		headers: any;
 		status: number;
 		text: string;
 	}
@@ -79,7 +79,7 @@ module IsoHttp {
 		data?: any;
 		headers?: any;
 		method?: string;
-		url?: string;
+		url: string;
 		withCredentials?: boolean;
 	}
 

@@ -22,7 +22,7 @@ declare module IsoHttp {
         protected addRequestInfo(err: Error): ClientError;
     }
     interface Response {
-        headers: Types.HashTable<string>;
+        headers: any;
         status: number;
         text: string;
     }
@@ -31,7 +31,7 @@ declare module IsoHttp {
         data?: any;
         headers?: any;
         method?: string;
-        url?: string;
+        url: string;
         withCredentials?: boolean;
     }
     interface ClientError extends Error {

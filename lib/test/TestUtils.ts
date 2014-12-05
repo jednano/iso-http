@@ -1,4 +1,6 @@
-﻿import IsoHttp = require('../IsoHttp');
+﻿/// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
+
+import IsoHttp = require('../IsoHttp');
 
 module TestUtils {
 

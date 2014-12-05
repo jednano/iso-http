@@ -1,3 +1,4 @@
+/// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
 import IsoHttp = require('../IsoHttp');
 declare module TestUtils {
     function getApiPath(path: string): string;
