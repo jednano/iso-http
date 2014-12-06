@@ -12,8 +12,8 @@ before_install:
 
 after_success:
   - npm install -g codeclimate-test-reporter
-  - cat coverage/lcov.info coverage/*/lcov.info
-  - cat coverage/lcov.info coverage/*/lcov.info | codeclimate
+  - cat coverage/lcov.info coverage/Firefox*/lcov.info > lcov.info
+  - codeclimate < lcov.info
 
 addons:
   code_climate:
