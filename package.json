@@ -1,8 +1,8 @@
 {
   "name": "iso-http",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An isomorphic HTTP request library.",
-  "main": "js/NodeHttp.js",
+  "main": "js/node/Http.js",
   "scripts": {
     "test": "gulp test"
   },
@@ -23,6 +23,11 @@
     "url": "https://github.com/jedmao/iso-http/issues"
   },
   "homepage": "https://github.com/jedmao/iso-http",
+  "files": [
+    "README.md",
+    "fake.js",
+    "js/"
+  ],
   "devDependencies": {
     "browserify": "^6.3.3",
     "cors": "^2.5.2",

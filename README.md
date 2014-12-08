@@ -17,6 +17,7 @@ An isomorphic HTTP request library.
 - [100% test coverage with 4.0 Code Climate GPA](#full-test-coverage)
 - Zero dependencies
 - Small footprint &ndash; 4KB (minified) / 2KB (gzipped)
+- [FakeHttp module for testing](#fake-http-module-for-testing)
 - [TypeScript source &ndash; definitions are free!](#typescript-source)
 
 
@@ -91,6 +92,48 @@ Tests are written in [Jasmine](http://jasmine.github.io/) to cover all library s
 All tests are run locally in Node, Chrome, Chrome Canary, Firefox, Safari and Internet Explorer. In [Travis-CI](https://travis-ci.org/jedmao/iso-http), tests are run in Node, Chrome and Firefox.
 
 For Internet Explorer, only versions 9 and above are supported. Please submit any issues on the [GitHub Issue Tracker](https://github.com/jedmao/iso-http/issues).
+
+
+### FakeHttp module for testing
+
+A FakeHttp module is available for testing. Here's how you require it:
+
+```js
+var fakeHttp = require('iso-http/fake');
+```
+
+Unlike the real iso-http module, the fake one returns a request object (an instance of FakeHttp.Agent), upon which you can run two methods. The `respondWith` method accepts a fake response object:
+
+```js
+it('responds with a fake response', function(done) {
+	var options = { /* your options here */ };
+	var fakeResponse = {
+		status: 123,
+		headers: { foo: 'bar' },
+		text: 'baz'
+	};
+	var req = fakeHttp.request(options, function(response) {
+		expect(response).toEqual(fakeResponse);
+		done();
+	});
+	req.respondWith(fakeResponse);
+});
+```
+
+The `rejectWith` method accepts an error object:
+
+```js
+it('rejects with an error', function(done) {
+	var options = { /* your options here */ };
+	var noop = function() {};
+	var req = fakeHttp.request(options, noop, function(err) {
+		expect(err instanceof Error).toBe(true);
+		expect(err.message).toEqual('No dice');
+		done();
+	});
+	req.rejectWith(new Error('No dice'));
+});
+```
 
 
 ### Typescript source
