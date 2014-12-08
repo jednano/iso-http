@@ -1,74 +1,4 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-function joinUrlWithQuery(url, query) {
-    if (!query || !Object.keys(query).length) {
-        return url;
-    }
-    var joiner = (url.indexOf('?') > -1) ? '&' : '?';
-    return url + joiner + serializeObject(query);
-}
-exports.joinUrlWithQuery = joinUrlWithQuery;
-function serializeObject(obj) {
-    return Object.keys(obj).map(function (key) {
-        return key + '=' + encodeURIComponent(obj[key]);
-    }).join('&');
-}
-exports.serializeObject = serializeObject;
-
-},{}],2:[function(require,module,exports){
-var IsoHttp;
-(function (IsoHttp) {
-    var Agent = (function () {
-        function Agent(options) {
-            this.headers = {};
-            if (!options || !Object.keys(options).length) {
-                throw new Error('Missing options.');
-            }
-            if (!options.url) {
-                throw new Error('Missing required option: url.');
-            }
-            this.url = options.url;
-            this.method = (options.method || 'GET').toUpperCase();
-            if (options.headers) {
-                this.setHeaders(options.headers);
-            }
-            if (options.contentType) {
-                this.contentType = options.contentType;
-            }
-            this.withCredentials = options.withCredentials || false;
-            this.data = options.data || {};
-        }
-        Object.defineProperty(Agent.prototype, "contentType", {
-            get: function () {
-                return this.headers['content-type'];
-            },
-            set: function (value) {
-                this.headers['content-type'] = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Agent.prototype.setHeaders = function (headers) {
-            var _this = this;
-            Object.keys(headers).forEach(function (fieldName) {
-                _this.headers[fieldName] = headers[fieldName];
-            });
-        };
-        Agent.prototype.send = function (resolve, reject) {
-            throw new Error('Not implemented.');
-        };
-        Agent.prototype.addRequestInfo = function (err) {
-            var result = err;
-            result.method = this.method;
-            result.url = this.url;
-            return result;
-        };
-        return Agent;
-    })();
-    IsoHttp.Agent = Agent;
-})(IsoHttp || (IsoHttp = {}));
-module.exports = IsoHttp;
-
-},{}],"iso-http":[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"iso-http":[function(require,module,exports){
 /* istanbul ignore next: TypeScript extend */
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -151,4 +81,74 @@ var Http;
 })(Http || (Http = {}));
 module.exports = Http;
 
-},{"../Helpers":1,"../IsoHttp":2}]},{},[]);
+},{"../Helpers":1,"../IsoHttp":2}],1:[function(require,module,exports){
+function joinUrlWithQuery(url, query) {
+    if (!query || !Object.keys(query).length) {
+        return url;
+    }
+    var joiner = (url.indexOf('?') > -1) ? '&' : '?';
+    return url + joiner + serializeObject(query);
+}
+exports.joinUrlWithQuery = joinUrlWithQuery;
+function serializeObject(obj) {
+    return Object.keys(obj).map(function (key) {
+        return key + '=' + encodeURIComponent(obj[key]);
+    }).join('&');
+}
+exports.serializeObject = serializeObject;
+
+},{}],2:[function(require,module,exports){
+var IsoHttp;
+(function (IsoHttp) {
+    var Agent = (function () {
+        function Agent(options) {
+            this.headers = {};
+            if (!options || !Object.keys(options).length) {
+                throw new Error('Missing options.');
+            }
+            if (!options.url) {
+                throw new Error('Missing required option: url.');
+            }
+            this.url = options.url;
+            this.method = (options.method || 'GET').toUpperCase();
+            if (options.headers) {
+                this.setHeaders(options.headers);
+            }
+            if (options.contentType) {
+                this.contentType = options.contentType;
+            }
+            this.withCredentials = options.withCredentials || false;
+            this.data = options.data || {};
+        }
+        Object.defineProperty(Agent.prototype, "contentType", {
+            get: function () {
+                return this.headers['content-type'];
+            },
+            set: function (value) {
+                this.headers['content-type'] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Agent.prototype.setHeaders = function (headers) {
+            var _this = this;
+            Object.keys(headers).forEach(function (fieldName) {
+                _this.headers[fieldName] = headers[fieldName];
+            });
+        };
+        Agent.prototype.send = function (resolve, reject) {
+            throw new Error('Not implemented.');
+        };
+        Agent.prototype.addRequestInfo = function (err) {
+            var result = err;
+            result.method = this.method;
+            result.url = this.url;
+            return result;
+        };
+        return Agent;
+    })();
+    IsoHttp.Agent = Agent;
+})(IsoHttp || (IsoHttp = {}));
+module.exports = IsoHttp;
+
+},{}]},{},[]);

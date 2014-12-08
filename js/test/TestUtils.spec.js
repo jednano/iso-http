@@ -36,7 +36,7 @@ describe('TestUtils', function () {
             var req = request(options);
             expect(req instanceof TestUtils.FakeHttp.Agent).toBe(true);
         });
-        it('fakes a resolved HTTP response with resolveWith', function () {
+        it('fakes a resolved HTTP response with resolveWith', function (done) {
             var fakeResponse = {
                 status: 123,
                 headers: { foo: 'bar' },
@@ -44,14 +44,16 @@ describe('TestUtils', function () {
             };
             var req = request(options, function (response) {
                 expect(response).toEqual(fakeResponse);
+                done();
             });
             req.respondWith(fakeResponse);
         });
-        it('fakes a client-rejected HTTP request with rejectWith', function () {
+        it('fakes a client-rejected HTTP request with rejectWith', function (done) {
             var req = request(options, TestUtils.noop, function (err) {
                 expect(err.method).toEqual('FOO');
                 expect(err.url).toEqual('bar');
                 expect(err.message).toEqual('baz');
+                done();
             });
             req.rejectWith(new Error('baz'));
         });

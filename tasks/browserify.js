@@ -17,11 +17,17 @@ module.exports = function() {
 		.pipe(rename('iso-http.min.js'))
 		.pipe(gulp.dest('dist'));
 
+	var fakeHttp = browserify()
+		.require('./fake.js', { expose: 'iso-http/fake' })
+		.bundle()
+		.pipe(source('iso-http--fake.js'))
+		.pipe(gulp.dest('dist'));
+
 	var testUtils = browserify()
 		.require('./js/test/TestUtils.js', { expose: 'TestUtils' })
 		.bundle()
 		.pipe(source('test-utils.js'))
 		.pipe(gulp.dest('dist'));
 
-	return eventStream.merge(isoHttp, testUtils);
+	return eventStream.merge(isoHttp, fakeHttp, testUtils);
 };
