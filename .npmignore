@@ -7,6 +7,7 @@ tslint.json
 coverage/
 d.ts/**/*.spec.d.ts
 d.ts/test/
+dist/test-utils.js
 js/**/*.spec.js
 lib/
 tasks/
