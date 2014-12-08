@@ -102,7 +102,13 @@ A FakeHttp module is available for testing. Here's how you require it:
 var fakeHttp = require('iso-http/fake');
 ```
 
-Unlike the real iso-http module, the fake one returns a request object (an instance of FakeHttp.Agent), upon which you can run two methods. The `respondWith` method accepts a fake response object:
+NOTE: If you're doing browser tests, you'll need to first reference the [iso-http--fake.js file](https://github.com/jedmao/iso-http/blob/master/dist/iso-http--fake.js) in the head section of your test runner's HTML file:
+
+```html
+<script src="bower_components/iso-http--fake.js"></script>
+```
+
+Unlike the real iso-http module, the fake one returns a request object (an instance of FakeHttp.Agent), upon which you can run two methods. The first method is `respondWith` and it accepts a fake response object:
 
 ```js
 it('responds with a fake response', function(done) {
@@ -120,7 +126,7 @@ it('responds with a fake response', function(done) {
 });
 ```
 
-The `rejectWith` method accepts an error object:
+The second method, `rejectWith`, accepts an error object:
 
 ```js
 it('rejects with an error', function(done) {
