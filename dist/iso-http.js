@@ -6,7 +6,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var Helpers = require('../Helpers');
+var _ = require('../Utils');
 var IsoHttp = require('../IsoHttp');
 function httpRequest(url, options) {
     new Agent(url, options).send();
@@ -35,7 +35,7 @@ var Agent = (function (_super) {
         }
     };
     Agent.prototype.open = function () {
-        var url = (this.method === 'GET') ? Helpers.joinUrlWithQuery(this.url, this.data) : this.url;
+        var url = (this.method === 'GET') ? _.joinUrlWithQuery(this.url, this.data) : this.url;
         this.xhr.open(this.method, url, true);
     };
     Agent.prototype.setCors = function () {
@@ -89,57 +89,8 @@ var Agent = (function (_super) {
 })(IsoHttp.Agent);
 module.exports = httpRequest;
 
-},{"../Helpers":1,"../IsoHttp":2}],1:[function(require,module,exports){
-function joinUrlWithQuery(url, query) {
-    if (!query || !Object.keys(query).length) {
-        return url;
-    }
-    var joiner = (url.indexOf('?') > -1) ? '&' : '?';
-    return url + joiner + serializeObject(query);
-}
-exports.joinUrlWithQuery = joinUrlWithQuery;
-function lowercaseKeys(object) {
-    var lowercased = {};
-    Object.keys(object).forEach(function (key) {
-        lowercased[key.toLowerCase()] = object[key];
-    });
-    return lowercased;
-}
-exports.lowercaseKeys = lowercaseKeys;
-function serializeObject(obj) {
-    return Object.keys(obj).map(function (key) {
-        return key + '=' + encodeURIComponent(obj[key]);
-    }).join('&');
-}
-exports.serializeObject = serializeObject;
-function assert(condition, message) {
-    if (!condition) {
-        throw new Error(message);
-    }
-}
-exports.assert = assert;
-function isUndefined(o) {
-    return typeof o === 'undefined';
-}
-exports.isUndefined = isUndefined;
-function isPlainObject(o) {
-    if (typeof o === 'object' && o) {
-        return o.constructor === Object;
-    }
-    return false;
-}
-exports.isPlainObject = isPlainObject;
-function isFunction(fn) {
-    return typeof fn === 'function';
-}
-exports.isFunction = isFunction;
-function noop() {
-    // noop
-}
-exports.noop = noop;
-
-},{}],2:[function(require,module,exports){
-var _ = require('./Helpers');
+},{"../IsoHttp":1,"../Utils":2}],1:[function(require,module,exports){
+var _ = require('./Utils');
 var IsoHttp;
 (function (IsoHttp) {
     var Agent = (function () {
@@ -214,4 +165,53 @@ var IsoHttp;
 })(IsoHttp || (IsoHttp = {}));
 module.exports = IsoHttp;
 
-},{"./Helpers":1}]},{},[]);
+},{"./Utils":2}],2:[function(require,module,exports){
+function joinUrlWithQuery(url, query) {
+    if (!query || !Object.keys(query).length) {
+        return url;
+    }
+    var joiner = (url.indexOf('?') > -1) ? '&' : '?';
+    return url + joiner + serializeObject(query);
+}
+exports.joinUrlWithQuery = joinUrlWithQuery;
+function lowercaseKeys(object) {
+    var lowercased = {};
+    Object.keys(object).forEach(function (key) {
+        lowercased[key.toLowerCase()] = object[key];
+    });
+    return lowercased;
+}
+exports.lowercaseKeys = lowercaseKeys;
+function serializeObject(obj) {
+    return Object.keys(obj).map(function (key) {
+        return key + '=' + encodeURIComponent(obj[key]);
+    }).join('&');
+}
+exports.serializeObject = serializeObject;
+function assert(condition, message) {
+    if (!condition) {
+        throw new Error(message);
+    }
+}
+exports.assert = assert;
+function isUndefined(o) {
+    return typeof o === 'undefined';
+}
+exports.isUndefined = isUndefined;
+function isPlainObject(o) {
+    if (typeof o === 'object' && o) {
+        return o.constructor === Object;
+    }
+    return false;
+}
+exports.isPlainObject = isPlainObject;
+function isFunction(fn) {
+    return typeof fn === 'function';
+}
+exports.isFunction = isFunction;
+function noop() {
+    // noop
+}
+exports.noop = noop;
+
+},{}]},{},[]);

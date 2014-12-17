@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
 
-import _ = require('../Helpers');
+import _ = require('../Utils');
 import IsoHttp = require('../IsoHttp');
 import TestUtils = require('./TestUtils');
 

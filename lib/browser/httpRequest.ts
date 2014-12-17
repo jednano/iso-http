@@ -1,4 +1,4 @@
-﻿import Helpers = require('../Helpers');
+﻿import _ = require('../Utils');
 import IsoHttp = require('../IsoHttp');
 import Types = require('../Types');
 
@@ -33,7 +33,7 @@ class Agent extends IsoHttp.Agent {
 
 	private open() {
 		var url = (this.method === 'GET')
-			? Helpers.joinUrlWithQuery(this.url, this.data)
+			? _.joinUrlWithQuery(this.url, this.data)
 			: this.url;
 		this.xhr.open(this.method, url, true);
 	}

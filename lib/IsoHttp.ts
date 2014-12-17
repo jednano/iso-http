@@ -1,4 +1,4 @@
-﻿import _ = require('./Helpers');
+﻿import _ = require('./Utils');
 
 module IsoHttp {
 

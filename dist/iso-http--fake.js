@@ -2,56 +2,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 module.exports = require('./js/test/TestUtils').FakeHttp;
 
 },{"./js/test/TestUtils":3}],1:[function(require,module,exports){
-function joinUrlWithQuery(url, query) {
-    if (!query || !Object.keys(query).length) {
-        return url;
-    }
-    var joiner = (url.indexOf('?') > -1) ? '&' : '?';
-    return url + joiner + serializeObject(query);
-}
-exports.joinUrlWithQuery = joinUrlWithQuery;
-function lowercaseKeys(object) {
-    var lowercased = {};
-    Object.keys(object).forEach(function (key) {
-        lowercased[key.toLowerCase()] = object[key];
-    });
-    return lowercased;
-}
-exports.lowercaseKeys = lowercaseKeys;
-function serializeObject(obj) {
-    return Object.keys(obj).map(function (key) {
-        return key + '=' + encodeURIComponent(obj[key]);
-    }).join('&');
-}
-exports.serializeObject = serializeObject;
-function assert(condition, message) {
-    if (!condition) {
-        throw new Error(message);
-    }
-}
-exports.assert = assert;
-function isUndefined(o) {
-    return typeof o === 'undefined';
-}
-exports.isUndefined = isUndefined;
-function isPlainObject(o) {
-    if (typeof o === 'object' && o) {
-        return o.constructor === Object;
-    }
-    return false;
-}
-exports.isPlainObject = isPlainObject;
-function isFunction(fn) {
-    return typeof fn === 'function';
-}
-exports.isFunction = isFunction;
-function noop() {
-    // noop
-}
-exports.noop = noop;
-
-},{}],2:[function(require,module,exports){
-var _ = require('./Helpers');
+var _ = require('./Utils');
 var IsoHttp;
 (function (IsoHttp) {
     var Agent = (function () {
@@ -126,7 +77,56 @@ var IsoHttp;
 })(IsoHttp || (IsoHttp = {}));
 module.exports = IsoHttp;
 
-},{"./Helpers":1}],3:[function(require,module,exports){
+},{"./Utils":2}],2:[function(require,module,exports){
+function joinUrlWithQuery(url, query) {
+    if (!query || !Object.keys(query).length) {
+        return url;
+    }
+    var joiner = (url.indexOf('?') > -1) ? '&' : '?';
+    return url + joiner + serializeObject(query);
+}
+exports.joinUrlWithQuery = joinUrlWithQuery;
+function lowercaseKeys(object) {
+    var lowercased = {};
+    Object.keys(object).forEach(function (key) {
+        lowercased[key.toLowerCase()] = object[key];
+    });
+    return lowercased;
+}
+exports.lowercaseKeys = lowercaseKeys;
+function serializeObject(obj) {
+    return Object.keys(obj).map(function (key) {
+        return key + '=' + encodeURIComponent(obj[key]);
+    }).join('&');
+}
+exports.serializeObject = serializeObject;
+function assert(condition, message) {
+    if (!condition) {
+        throw new Error(message);
+    }
+}
+exports.assert = assert;
+function isUndefined(o) {
+    return typeof o === 'undefined';
+}
+exports.isUndefined = isUndefined;
+function isPlainObject(o) {
+    if (typeof o === 'object' && o) {
+        return o.constructor === Object;
+    }
+    return false;
+}
+exports.isPlainObject = isPlainObject;
+function isFunction(fn) {
+    return typeof fn === 'function';
+}
+exports.isFunction = isFunction;
+function noop() {
+    // noop
+}
+exports.noop = noop;
+
+},{}],3:[function(require,module,exports){
 /// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -222,4 +222,4 @@ var TestUtils;
 })(TestUtils || (TestUtils = {}));
 module.exports = TestUtils;
 
-},{"../IsoHttp":2}]},{},[]);
+},{"../IsoHttp":1}]},{},[]);

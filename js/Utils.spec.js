@@ -1,6 +1,6 @@
 /// <reference path="../bower_components/dt-jasmine/jasmine.d.ts" />
-var _ = require('./Helpers');
-describe('Helpers', function () {
+var _ = require('./Utils');
+describe('Utils', function () {
     describe('joinUrlWithQuery', function () {
         it('returns the URL as-is when the query is not supplied or empty', function () {
             expect(_.joinUrlWithQuery('foo')).toEqual('foo');

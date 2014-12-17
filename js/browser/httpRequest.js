@@ -5,7 +5,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var Helpers = require('../Helpers');
+var _ = require('../Utils');
 var IsoHttp = require('../IsoHttp');
 function httpRequest(url, options) {
     new Agent(url, options).send();
@@ -34,7 +34,7 @@ var Agent = (function (_super) {
         }
     };
     Agent.prototype.open = function () {
-        var url = (this.method === 'GET') ? Helpers.joinUrlWithQuery(this.url, this.data) : this.url;
+        var url = (this.method === 'GET') ? _.joinUrlWithQuery(this.url, this.data) : this.url;
         this.xhr.open(this.method, url, true);
     };
     Agent.prototype.setCors = function () {

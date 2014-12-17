@@ -1,4 +1,4 @@
-var _ = require('./Helpers');
+var _ = require('./Utils');
 var IsoHttp;
 (function (IsoHttp) {
     var Agent = (function () {

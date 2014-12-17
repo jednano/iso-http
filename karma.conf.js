@@ -15,7 +15,7 @@ module.exports = function(config) {
 
 		// list of files / patterns to load in the browser
 		files: [
-			'js/Helpers.js',
+			'js/Utils.js',
 			'js/IsoHttp.js',
 			'js/browser/*.js',
 			'js/test/TestUtils.js'
