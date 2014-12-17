@@ -1,74 +1,4 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-function joinUrlWithQuery(url, query) {
-    if (!query || !Object.keys(query).length) {
-        return url;
-    }
-    var joiner = (url.indexOf('?') > -1) ? '&' : '?';
-    return url + joiner + serializeObject(query);
-}
-exports.joinUrlWithQuery = joinUrlWithQuery;
-function serializeObject(obj) {
-    return Object.keys(obj).map(function (key) {
-        return key + '=' + encodeURIComponent(obj[key]);
-    }).join('&');
-}
-exports.serializeObject = serializeObject;
-
-},{}],2:[function(require,module,exports){
-var IsoHttp;
-(function (IsoHttp) {
-    var Agent = (function () {
-        function Agent(options) {
-            this.headers = {};
-            if (!options || !Object.keys(options).length) {
-                throw new Error('Missing options.');
-            }
-            if (!options.url) {
-                throw new Error('Missing required option: url.');
-            }
-            this.url = options.url;
-            this.method = (options.method || 'GET').toUpperCase();
-            if (options.headers) {
-                this.setHeaders(options.headers);
-            }
-            if (options.contentType) {
-                this.contentType = options.contentType;
-            }
-            this.withCredentials = options.withCredentials || false;
-            this.data = options.data || {};
-        }
-        Object.defineProperty(Agent.prototype, "contentType", {
-            get: function () {
-                return this.headers['content-type'];
-            },
-            set: function (value) {
-                this.headers['content-type'] = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Agent.prototype.setHeaders = function (headers) {
-            var _this = this;
-            Object.keys(headers).forEach(function (fieldName) {
-                _this.headers[fieldName] = headers[fieldName];
-            });
-        };
-        Agent.prototype.send = function (resolve, reject) {
-            throw new Error('Not implemented.');
-        };
-        Agent.prototype.addRequestInfo = function (err) {
-            var result = err;
-            result.method = this.method;
-            result.url = this.url;
-            return result;
-        };
-        return Agent;
-    })();
-    IsoHttp.Agent = Agent;
-})(IsoHttp || (IsoHttp = {}));
-module.exports = IsoHttp;
-
-},{}],"iso-http":[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"iso-http":[function(require,module,exports){
 /* istanbul ignore next: TypeScript extend */
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -78,77 +8,210 @@ var __extends = this.__extends || function (d, b) {
 };
 var Helpers = require('../Helpers');
 var IsoHttp = require('../IsoHttp');
-var Http;
-(function (Http) {
-    function request(options, resolve, reject) {
-        new Agent(options).send(resolve, reject);
-    }
-    Http.request = request;
-    var Agent = (function (_super) {
-        __extends(Agent, _super);
-        function Agent(options) {
-            _super.call(this, options);
-            var xrw = 'x-requested-with';
-            this.headers[xrw] = this.headers[xrw] || 'XMLHttpRequest';
+function httpRequest(url, options) {
+    new Agent(url, options).send();
+}
+var Agent = (function (_super) {
+    __extends(Agent, _super);
+    function Agent(url, options) {
+        _super.call(this, url, options);
+        this.url = url;
+        var xrw = 'x-requested-with';
+        this.headers[xrw] = this.headers[xrw] || 'XMLHttpRequest';
+        this.tryCreateXhr();
+        if (this.hasErrors) {
+            return;
         }
-        Agent.prototype.send = function (resolve, reject) {
-            var _this = this;
-            var url = (this.method === 'GET') ? Helpers.joinUrlWithQuery(this.url, this.data) : this.url;
-            var xhr = this.createXhr();
-            xhr.open(this.method, url, true);
-            if (this.withCredentials) {
-                xhr.withCredentials = true;
+        this.open();
+        this.setCors();
+        this.setXhrHeaders();
+    }
+    Agent.prototype.tryCreateXhr = function () {
+        try {
+            this.xhr = new XMLHttpRequest();
+        }
+        catch (err) {
+            this.onError(new Error('Unsupported browser: Failed to create XHR object.'));
+        }
+    };
+    Agent.prototype.open = function () {
+        var url = (this.method === 'GET') ? Helpers.joinUrlWithQuery(this.url, this.data) : this.url;
+        this.xhr.open(this.method, url, true);
+    };
+    Agent.prototype.setCors = function () {
+        if (this.withCredentials) {
+            this.xhr.withCredentials = true;
+        }
+    };
+    Agent.prototype.setXhrHeaders = function () {
+        var _this = this;
+        Object.keys(this.headers).forEach(function (fieldName) {
+            _this.xhr.setRequestHeader(fieldName, _this.headers[fieldName]);
+        });
+    };
+    Agent.prototype.send = function () {
+        var _this = this;
+        if (this.hasErrors) {
+            return;
+        }
+        var xhr = this.xhr;
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) {
+                return;
             }
-            this.setXhrHeaders(xhr, this.headers);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState !== 4) {
-                    return;
-                }
-                if (xhr.status === 0 && typeof reject === 'function') {
-                    reject(_this.addRequestInfo(new Error('Unspecified client error.')));
-                    return;
-                }
-                if (typeof resolve !== 'function') {
-                    return;
-                }
-                resolve({
-                    status: xhr.status,
-                    headers: _this.parseHeaders(xhr.getAllResponseHeaders()),
-                    text: xhr.responseText
-                });
-            };
-            xhr.send(this.method !== 'GET' && JSON.stringify(this.data));
-        };
-        Agent.prototype.setXhrHeaders = function (xhr, headers) {
-            Object.keys(headers).forEach(function (name) {
-                xhr.setRequestHeader(name, headers[name]);
+            if (xhr.status === 0) {
+                _this.onError();
+                return;
+            }
+            _this.onResponse({
+                status: xhr.status,
+                headers: _this.parseHeaders(xhr.getAllResponseHeaders()),
+                text: xhr.responseText
             });
         };
-        Agent.prototype.createXhr = function () {
+        var data = this.method !== 'GET' && JSON.stringify(this.data);
+        xhr.send(data);
+    };
+    Agent.prototype.parseHeaders = function (headers) {
+        var lines = headers.split(/\r?\n/);
+        lines.pop(); // final newline
+        var fields = {};
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i];
+            var pos = line.indexOf(':');
+            var field = line.slice(0, pos).toLowerCase();
+            var value = line.slice(pos + 1).trim();
+            fields[field] = value;
+        }
+        return fields;
+    };
+    return Agent;
+})(IsoHttp.Agent);
+module.exports = httpRequest;
+
+},{"../Helpers":1,"../IsoHttp":2}],1:[function(require,module,exports){
+function joinUrlWithQuery(url, query) {
+    if (!query || !Object.keys(query).length) {
+        return url;
+    }
+    var joiner = (url.indexOf('?') > -1) ? '&' : '?';
+    return url + joiner + serializeObject(query);
+}
+exports.joinUrlWithQuery = joinUrlWithQuery;
+function lowercaseKeys(object) {
+    var lowercased = {};
+    Object.keys(object).forEach(function (key) {
+        lowercased[key.toLowerCase()] = object[key];
+    });
+    return lowercased;
+}
+exports.lowercaseKeys = lowercaseKeys;
+function serializeObject(obj) {
+    return Object.keys(obj).map(function (key) {
+        return key + '=' + encodeURIComponent(obj[key]);
+    }).join('&');
+}
+exports.serializeObject = serializeObject;
+function assert(condition, message) {
+    if (!condition) {
+        throw new Error(message);
+    }
+}
+exports.assert = assert;
+function isUndefined(o) {
+    return typeof o === 'undefined';
+}
+exports.isUndefined = isUndefined;
+function isPlainObject(o) {
+    if (typeof o === 'object' && o) {
+        return o.constructor === Object;
+    }
+    return false;
+}
+exports.isPlainObject = isPlainObject;
+function isFunction(fn) {
+    return typeof fn === 'function';
+}
+exports.isFunction = isFunction;
+function noop() {
+    // noop
+}
+exports.noop = noop;
+
+},{}],2:[function(require,module,exports){
+var _ = require('./Helpers');
+var IsoHttp;
+(function (IsoHttp) {
+    var Agent = (function () {
+        function Agent(url, options) {
+            this.url = url;
+            this.hasErrors = false;
+            this.nullResponse = {
+                status: 0,
+                headers: {},
+                text: ''
+            };
+            options = options || {};
+            this.onClientError = this.wrapClientErrorCallback(options.onClientError);
+            this.onResponse = this.wrapResponseCallback(options.onResponse);
             try {
-                return new XMLHttpRequest();
+                this.validateRequest(options);
+                this.method = (options.method || 'GET').toUpperCase();
+                this.headers = options.headers || {};
+                this.withCredentials = !!options.withCredentials;
+                this.data = options.data || {};
             }
-            catch (err) {
-                throw new Error('Unsupported browser: Failed to create XHR object.');
+            catch (error) {
+                this.onError(error);
             }
+        }
+        Agent.prototype.wrapClientErrorCallback = function (onClientError) {
+            return this.wrapTryCatch(onClientError || _.noop, _.noop);
         };
-        Agent.prototype.parseHeaders = function (headers) {
-            var lines = headers.split(/\r?\n/);
-            lines.pop(); // final newline
-            var fields = {};
-            for (var i = 0; i < lines.length; i++) {
-                var line = lines[i];
-                var pos = line.indexOf(':');
-                var field = line.slice(0, pos).toLowerCase();
-                var value = line.slice(pos + 1).trim();
-                fields[field] = value;
+        Agent.prototype.wrapTryCatch = function (tryFunction, onCatch) {
+            var _this = this;
+            return function () {
+                try {
+                    tryFunction.apply(_this, arguments);
+                }
+                catch (err) {
+                    onCatch(err);
+                }
+            };
+        };
+        Agent.prototype.wrapResponseCallback = function (onResponse) {
+            onResponse = onResponse || _.noop;
+            return this.wrapTryCatch(function (response) {
+                response.headers = _.lowercaseKeys(response.headers);
+                onResponse(response);
+            }, this.onError);
+        };
+        Agent.prototype.onError = function (error) {
+            this.hasErrors = true;
+            if (!error) {
+                error = new Error();
             }
-            return fields;
+            error.url = this.url;
+            error.method = this.method;
+            if (error.message) {
+                error.message = 'iso-http: ' + error.message;
+            }
+            else {
+                error.message = 'Unknown error in iso-http module.';
+            }
+            this.onClientError(error);
+            this.onResponse(this.nullResponse);
+        };
+        Agent.prototype.validateRequest = function (options) {
+            _.assert(this.url, 'Null or undefined URL in request.');
+            _.assert(_.isPlainObject(options), 'Request options must be a plain object.');
+            _.assert(_.isFunction(this.onResponse), 'Response callback must be a function.');
+            _.assert(_.isFunction(this.onClientError), 'Client error callback must be a function.');
         };
         return Agent;
-    })(IsoHttp.Agent);
-    Http.Agent = Agent;
-})(Http || (Http = {}));
-module.exports = Http;
+    })();
+    IsoHttp.Agent = Agent;
+})(IsoHttp || (IsoHttp = {}));
+module.exports = IsoHttp;
 
-},{"../Helpers":1,"../IsoHttp":2}]},{},[]);
+},{"./Helpers":1}]},{},[]);

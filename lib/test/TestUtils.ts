@@ -28,46 +28,41 @@ module TestUtils {
 		};
 		Object.keys(statusCodes).forEach(status => {
 			it('handles a ' + status, done => {
-				var options = {
-					url: getApiPath('/' + status)
-				};
-				request(options, response => {
-					expect(response.status).toEqual(parseInt(status, 10));
-					expect(response.text).toEqual(statusCodes[status]);
-					done();
+				var url = getApiPath('/' + status);
+				request(url, {
+					onResponse: response => {
+						expect(response.status).toEqual(status);
+						expect(response.text).toEqual(statusCodes[status]);
+						done();
+					}
 				});
 			});
 		});
 
 		it('handles a 200 w/o a resolve callback', () => {
-			var options = {
-				url: getApiPath('/foo')
-			};
 			var fn = () => {
-				request(options);
+				request(getApiPath('/foo'));
 			};
 			expect(fn).not.toThrowError();
 		});
 
 		it('responds with headers as an object literal', done => {
-			var options = {
-				url: getApiPath('/not-found')
-			};
-			request(options, response => {
-				expect(isPlainObject(response.headers)).toBe(true);
-				done();
+			request(getApiPath('/not-found'), {
+				onResponse: response => {
+					expect(isPlainObject(response.headers)).toBe(true);
+					done();
+				}
 			});
 		});
 
 		it('rejects a client error', done => {
-			var options = {
-				url: 'http://foo.bar.baz/qux'
-			};
-			request(options, noop, err => {
-				expect(err instanceof Error).toBe(true);
-				expect(err.method).toEqual('GET');
-				expect(err.url).toEqual('http://foo.bar.baz/qux');
-				done();
+			request('http://foo.bar.baz/qux', {
+				onClientError: error => {
+					expect(error instanceof Error).toBe(true);
+					expect(error.method).toEqual('GET');
+					expect(error.url).toEqual('http://foo.bar.baz/qux');
+					done();
+				}
 			});
 		});
 
@@ -75,34 +70,18 @@ module TestUtils {
 
 	export module FakeHttp {
 
-		export function request(
-			options?: IsoHttp.RequestOptions,
-			resolve?: IsoHttp.ResolveCallback,
-			reject?: IsoHttp.RejectCallback) {
-			return new Agent(options).send(resolve, reject);
+		export function request(url: string, options?: IsoHttp.RequestOptions) {
+			return new Agent(url, options);
 		}
 
 		export class Agent extends IsoHttp.Agent {
 
-			private resolve: IsoHttp.ResolveCallback;
-			private reject: IsoHttp.RejectCallback;
-
-			send(resolve?: IsoHttp.ResolveCallback, reject?: IsoHttp.RejectCallback) {
-				this.resolve = resolve;
-				this.reject = reject;
-				return this;
-			}
-
 			respondWith(response: IsoHttp.Response) {
-				if (typeof this.resolve === 'function') {
-					this.resolve(response);
-				}
+				this.onResponse(response);
 			}
 
-			rejectWith(err: Error) {
-				if (typeof this.reject === 'function') {
-					this.reject(this.addRequestInfo(err));
-				}
+			errorWith(error: Error) {
+				this.onError(error);
 			}
 
 		}

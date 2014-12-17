@@ -1,14 +1,12 @@
 ﻿/// <reference path="../../bower_components/dt-node/node.d.ts" />
 /// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
 
-import Http = require('./Http');
+import httpRequest = require('./httpRequest');
 import TestUtils = require('../test/TestUtils');
 
 describe('NodeHttp.request()', () => {
 
-	var request = Http.request;
-
-	TestUtils.runIsomorphicTests(request);
+	TestUtils.runIsomorphicTests(httpRequest);
 
 	it('handles a 404', done => {
 		request({ url: TestUtils.getApiPath('/404') }, response => {
@@ -19,12 +17,11 @@ describe('NodeHttp.request()', () => {
 	});
 
 	it('rejects a client error', done => {
-		var options = {
-			url: 'http://foo.bar.baz/qux'
-		};
-		request(options, TestUtils.noop, err => {
-			expect(err.message).toEqual('getaddrinfo ENOTFOUND');
-			done();
+		httpRequest('http://foo.bar.baz/qux', {
+			onClientError: error => {
+				expect(error.message).toEqual('iso-http: getaddrinfo ENOTFOUND');
+				done();
+			}
 		});
 	});
 

@@ -31,51 +31,46 @@ var TestUtils;
         };
         Object.keys(statusCodes).forEach(function (status) {
             it('handles a ' + status, function (done) {
-                var options = {
-                    url: getApiPath('/' + status)
-                };
-                request(options, function (response) {
-                    expect(response.status).toEqual(parseInt(status, 10));
-                    expect(response.text).toEqual(statusCodes[status]);
-                    done();
+                var url = getApiPath('/' + status);
+                request(url, {
+                    onResponse: function (response) {
+                        expect(response.status).toEqual(status);
+                        expect(response.text).toEqual(statusCodes[status]);
+                        done();
+                    }
                 });
             });
         });
         it('handles a 200 w/o a resolve callback', function () {
-            var options = {
-                url: getApiPath('/foo')
-            };
             var fn = function () {
-                request(options);
+                request(getApiPath('/foo'));
             };
             expect(fn).not.toThrowError();
         });
         it('responds with headers as an object literal', function (done) {
-            var options = {
-                url: getApiPath('/not-found')
-            };
-            request(options, function (response) {
-                expect(isPlainObject(response.headers)).toBe(true);
-                done();
+            request(getApiPath('/not-found'), {
+                onResponse: function (response) {
+                    expect(isPlainObject(response.headers)).toBe(true);
+                    done();
+                }
             });
         });
         it('rejects a client error', function (done) {
-            var options = {
-                url: 'http://foo.bar.baz/qux'
-            };
-            request(options, noop, function (err) {
-                expect(err instanceof Error).toBe(true);
-                expect(err.method).toEqual('GET');
-                expect(err.url).toEqual('http://foo.bar.baz/qux');
-                done();
+            request('http://foo.bar.baz/qux', {
+                onClientError: function (error) {
+                    expect(error instanceof Error).toBe(true);
+                    expect(error.method).toEqual('GET');
+                    expect(error.url).toEqual('http://foo.bar.baz/qux');
+                    done();
+                }
             });
         });
     }
     TestUtils.runIsomorphicTests = runIsomorphicTests;
     var FakeHttp;
     (function (FakeHttp) {
-        function request(options, resolve, reject) {
-            return new Agent(options).send(resolve, reject);
+        function request(url, options) {
+            return new Agent(url, options);
         }
         FakeHttp.request = request;
         var Agent = (function (_super) {
@@ -83,20 +78,11 @@ var TestUtils;
             function Agent() {
                 _super.apply(this, arguments);
             }
-            Agent.prototype.send = function (resolve, reject) {
-                this.resolve = resolve;
-                this.reject = reject;
-                return this;
-            };
             Agent.prototype.respondWith = function (response) {
-                if (typeof this.resolve === 'function') {
-                    this.resolve(response);
-                }
+                this.onResponse(response);
             };
-            Agent.prototype.rejectWith = function (err) {
-                if (typeof this.reject === 'function') {
-                    this.reject(this.addRequestInfo(err));
-                }
+            Agent.prototype.errorWith = function (error) {
+                this.onError(error);
             };
             return Agent;
         })(IsoHttp.Agent);

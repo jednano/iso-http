@@ -1,42 +1,46 @@
-import Types = require('./Types');
 declare module IsoHttp {
     interface Request {
-        (options: RequestOptions, resolve?: ResolveCallback, reject?: RejectCallback): void;
+        (url: string, options?: RequestOptions): void;
     }
-    interface ResolveCallback {
+    interface RequestOptions {
+        method?: string;
+        headers?: any;
+        data?: any;
+        withCredentials?: boolean;
+        onResponse?: ResponseCallback;
+        onClientError?: ClientErrorCallback;
+    }
+    interface ResponseCallback {
         (response: Response): void;
-    }
-    interface RejectCallback {
-        (error: ClientError): void;
-    }
-    class Agent {
-        protected url: string;
-        protected method: string;
-        protected headers: Types.HashTable<string>;
-        protected data: Types.HashTable<string>;
-        protected withCredentials: boolean;
-        contentType: string;
-        constructor(options: RequestOptions);
-        setHeaders(headers: Types.HashTable<string>): void;
-        send(resolve?: ResolveCallback, reject?: RejectCallback): void;
-        protected addRequestInfo(err: Error): ClientError;
     }
     interface Response {
         headers: any;
         status: number;
         text: string;
     }
-    interface RequestOptions {
-        contentType?: string;
-        data?: any;
-        headers?: any;
-        method?: string;
-        url: string;
-        withCredentials?: boolean;
+    interface ClientErrorCallback {
+        (clientError: ClientError): void;
     }
     interface ClientError extends Error {
         method: string;
         url: string;
+    }
+    class Agent {
+        protected url: string;
+        protected method: string;
+        protected headers: any;
+        protected withCredentials: boolean;
+        protected data: any;
+        protected onResponse: ResponseCallback;
+        protected onClientError: ClientErrorCallback;
+        protected hasErrors: boolean;
+        private nullResponse;
+        constructor(url: string, options?: RequestOptions);
+        private wrapClientErrorCallback(onClientError?);
+        private wrapTryCatch(tryFunction, onCatch);
+        private wrapResponseCallback(onResponse?);
+        protected onError(error?: any): void;
+        private validateRequest(options);
     }
 }
 export = IsoHttp;

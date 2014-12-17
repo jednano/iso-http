@@ -1,6 +1,6 @@
 # iso-http
 
-An isomorphic HTTP request library.
+An HTTP request library that enables isomorphic applications.
 
 [![Build Status](https://secure.travis-ci.org/jedmao/iso-http.svg)](http://travis-ci.org/jedmao/iso-http)
 [![Dependency Status](https://david-dm.org/jedmao/iso-http.svg)](https://david-dm.org/jedmao/iso-http)
@@ -13,7 +13,7 @@ An isomorphic HTTP request library.
 
 ## Features
 
-- [Isomorphic &ndash; runs on Node and in-browser with the same interface!](#isomorphic)
+- [Enables Isomorphic Applications &ndash; runs on Node and in-browser with the same interface!](#enables-isomorphic-applications)
 - [100% test coverage with 4.0 Code Climate GPA](#full-test-coverage)
 - Zero dependencies
 - Small footprint &ndash; 4KB (minified) / 2KB (gzipped)
@@ -21,7 +21,7 @@ An isomorphic HTTP request library.
 - [TypeScript source &ndash; definitions are free!](#typescript-source)
 
 
-### Isomorphic
+### Enables Isomorphic Applications
 
 With iso-http, the only thing different between Node and in-browser is the installation. This means you can use iso-http in your [isomorphic](https://www.google.com/search?q=isomoprhic%20javascript) applications in the most consistent way. In Node, the built-in [http module](http://nodejs.org/api/http.html#http_http_request_options_callback) is utilized. In the browser, the [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) is used without any reference to Node libraries. This keeps the footprint light.
 
@@ -53,24 +53,23 @@ var http = require('iso-http');
 Now, you can make an http request:
 
 ```js
-var requestOptions = {
-  url: 'http://domain.com/foo'
-};
-var request = http.request(requestOptions, function(response) {
-  // handle response
+http.request('http://domain.com/foo', {
+	onResponse: function(response) {
+		// handle response
+	}
 });
 ```
 
 Your request options must follow the following interface. Note that `?` indicates an optional field and `any` represents an [Object literal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Values,_variables,_and_literals#Object_literals) or hash.
 
 ```ts
-interface RequestOptions {
-	url: string;
-	method?: string; // default: 'GET'
-	contentType?: string;
+export interface RequestOptions {
+	method?: string;
 	headers?: any;
-	withCredentials?: boolean; // default: false
 	data?: any;
+	withCredentials?: boolean;
+	onResponse?: ResponseCallback;
+	onClientError?: ClientErrorCallback;
 }
 ```
 
@@ -78,11 +77,35 @@ The callback function will be called with a response object that uses the follow
 
 ```ts
 interface Response {
-	headers: Types.HashTable<string>;
 	status: number;
+	headers: any;
 	text: string;
 }
 ```
+
+Note that the headers will be returned with lowercase keys. In the case of an error, a null response will be provided:
+
+```json
+{
+	"status": 0,
+	"headers": {},
+	"text": ""
+}
+```
+
+On the topic of errors, only client errors are handled in this module. Server errors and response codes are outside the scope of this module. To handle a client error you would do the following:
+
+```js
+http.request('http://domain.com/foo', {
+	onClientError: function(error) {
+		console.log('method:', error.method);
+		console.log('url:', error.url);
+		console.log('message:', error.message);
+	}
+});
+```
+
+Note that additional information is attached to the error instance, providing the method and URL that were requested. Also note that if you were to throw an error inside your error callback the null response will still be provided to the response callback. If there are errors validating your request arguments/options, you will see multiple errors reported for each validation error.
 
 
 ### Full test coverage
@@ -108,17 +131,18 @@ NOTE: If you're doing browser tests, you'll need to first reference the [iso-htt
 <script src="bower_components/iso-http--fake.js"></script>
 ```
 
-Unlike the real iso-http module, the fake one returns a request object (an instance of FakeHttp.Agent), upon which you can run two methods. The first method is `respondWith` and it accepts a fake response object:
+Unlike the real iso-http module, the fake one returns a request object (an instance of FakeHttp.Agent), upon which you can run two methods. The first method is `respondWith`. Itt accepts a fake response object:
 
 ```js
 it('responds with a fake response', function(done) {
+	var url = 'http://domain.com/foo';
 	var options = { /* your options here */ };
 	var fakeResponse = {
 		status: 123,
 		headers: { foo: 'bar' },
 		text: 'baz'
 	};
-	var req = fakeHttp.request(options, function(response) {
+	var req = fakeHttp.request(url, options, function(response) {
 		expect(response).toEqual(fakeResponse);
 		done();
 	});
@@ -126,18 +150,19 @@ it('responds with a fake response', function(done) {
 });
 ```
 
-The second method, `rejectWith`, accepts an error object:
+The second method, `errorWith`, accepts an error object:
 
 ```js
 it('rejects with an error', function(done) {
+	var url = 'http://domain.com/foo';
 	var options = { /* your options here */ };
 	var noop = function() {};
-	var req = fakeHttp.request(options, noop, function(err) {
+	var req = fakeHttp.request(url, options, noop, function(err) {
 		expect(err instanceof Error).toBe(true);
 		expect(err.message).toEqual('No dice');
 		done();
 	});
-	req.rejectWith(new Error('No dice'));
+	req.errorWith(new Error('No dice'));
 });
 ```
 

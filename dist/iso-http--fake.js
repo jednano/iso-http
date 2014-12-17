@@ -1,50 +1,124 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"iso-http/fake":[function(require,module,exports){
+module.exports = require('./js/test/TestUtils').FakeHttp;
+
+},{"./js/test/TestUtils":3}],1:[function(require,module,exports){
+function joinUrlWithQuery(url, query) {
+    if (!query || !Object.keys(query).length) {
+        return url;
+    }
+    var joiner = (url.indexOf('?') > -1) ? '&' : '?';
+    return url + joiner + serializeObject(query);
+}
+exports.joinUrlWithQuery = joinUrlWithQuery;
+function lowercaseKeys(object) {
+    var lowercased = {};
+    Object.keys(object).forEach(function (key) {
+        lowercased[key.toLowerCase()] = object[key];
+    });
+    return lowercased;
+}
+exports.lowercaseKeys = lowercaseKeys;
+function serializeObject(obj) {
+    return Object.keys(obj).map(function (key) {
+        return key + '=' + encodeURIComponent(obj[key]);
+    }).join('&');
+}
+exports.serializeObject = serializeObject;
+function assert(condition, message) {
+    if (!condition) {
+        throw new Error(message);
+    }
+}
+exports.assert = assert;
+function isUndefined(o) {
+    return typeof o === 'undefined';
+}
+exports.isUndefined = isUndefined;
+function isPlainObject(o) {
+    if (typeof o === 'object' && o) {
+        return o.constructor === Object;
+    }
+    return false;
+}
+exports.isPlainObject = isPlainObject;
+function isFunction(fn) {
+    return typeof fn === 'function';
+}
+exports.isFunction = isFunction;
+function noop() {
+    // noop
+}
+exports.noop = noop;
+
+},{}],2:[function(require,module,exports){
+var _ = require('./Helpers');
 var IsoHttp;
 (function (IsoHttp) {
     var Agent = (function () {
-        function Agent(options) {
-            this.headers = {};
-            if (!options || !Object.keys(options).length) {
-                throw new Error('Missing options.');
+        function Agent(url, options) {
+            this.url = url;
+            this.hasErrors = false;
+            this.nullResponse = {
+                status: 0,
+                headers: {},
+                text: ''
+            };
+            options = options || {};
+            this.onClientError = this.wrapClientErrorCallback(options.onClientError);
+            this.onResponse = this.wrapResponseCallback(options.onResponse);
+            try {
+                this.validateRequest(options);
+                this.method = (options.method || 'GET').toUpperCase();
+                this.headers = options.headers || {};
+                this.withCredentials = !!options.withCredentials;
+                this.data = options.data || {};
             }
-            if (!options.url) {
-                throw new Error('Missing required option: url.');
+            catch (error) {
+                this.onError(error);
             }
-            this.url = options.url;
-            this.method = (options.method || 'GET').toUpperCase();
-            if (options.headers) {
-                this.setHeaders(options.headers);
-            }
-            if (options.contentType) {
-                this.contentType = options.contentType;
-            }
-            this.withCredentials = options.withCredentials || false;
-            this.data = options.data || {};
         }
-        Object.defineProperty(Agent.prototype, "contentType", {
-            get: function () {
-                return this.headers['content-type'];
-            },
-            set: function (value) {
-                this.headers['content-type'] = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Agent.prototype.setHeaders = function (headers) {
+        Agent.prototype.wrapClientErrorCallback = function (onClientError) {
+            return this.wrapTryCatch(onClientError || _.noop, _.noop);
+        };
+        Agent.prototype.wrapTryCatch = function (tryFunction, onCatch) {
             var _this = this;
-            Object.keys(headers).forEach(function (fieldName) {
-                _this.headers[fieldName] = headers[fieldName];
-            });
+            return function () {
+                try {
+                    tryFunction.apply(_this, arguments);
+                }
+                catch (err) {
+                    onCatch(err);
+                }
+            };
         };
-        Agent.prototype.send = function (resolve, reject) {
-            throw new Error('Not implemented.');
+        Agent.prototype.wrapResponseCallback = function (onResponse) {
+            onResponse = onResponse || _.noop;
+            return this.wrapTryCatch(function (response) {
+                response.headers = _.lowercaseKeys(response.headers);
+                onResponse(response);
+            }, this.onError);
         };
-        Agent.prototype.addRequestInfo = function (err) {
-            var result = err;
-            result.method = this.method;
-            result.url = this.url;
-            return result;
+        Agent.prototype.onError = function (error) {
+            this.hasErrors = true;
+            if (!error) {
+                error = new Error();
+            }
+            error.url = this.url;
+            error.method = this.method;
+            if (error.message) {
+                error.message = 'iso-http: ' + error.message;
+            }
+            else {
+                error.message = 'Unknown error in iso-http module.';
+            }
+            this.onClientError(error);
+            this.onResponse(this.nullResponse);
+        };
+        Agent.prototype.validateRequest = function (options) {
+            _.assert(this.url, 'Null or undefined URL in request.');
+            _.assert(_.isPlainObject(options), 'Request options must be a plain object.');
+            _.assert(_.isFunction(this.onResponse), 'Response callback must be a function.');
+            _.assert(_.isFunction(this.onClientError), 'Client error callback must be a function.');
         };
         return Agent;
     })();
@@ -52,7 +126,7 @@ var IsoHttp;
 })(IsoHttp || (IsoHttp = {}));
 module.exports = IsoHttp;
 
-},{}],2:[function(require,module,exports){
+},{"./Helpers":1}],3:[function(require,module,exports){
 /// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -82,55 +156,52 @@ var TestUtils;
     function runIsomorphicTests(request) {
         var statusCodes = {
             200: 'foo',
-            500: 'fail'
+            500: 'fail',
+            404: 'Cannot GET /404\n'
         };
-        Object.keys(statusCodes).forEach(function (status) {
+        Object.keys(statusCodes).forEach(function (statusCode) {
+            var status = parseInt(statusCode, 10);
             it('handles a ' + status, function (done) {
-                var options = {
-                    url: getApiPath('/' + status)
-                };
-                request(options, function (response) {
-                    expect(response.status).toEqual(parseInt(status, 10));
-                    expect(response.text).toEqual(statusCodes[status]);
-                    done();
+                var url = getApiPath('/' + status);
+                request(url, {
+                    onResponse: function (response) {
+                        expect(response.status).toEqual(status);
+                        expect(response.text).toEqual(statusCodes[status]);
+                        done();
+                    }
                 });
             });
         });
         it('handles a 200 w/o a resolve callback', function () {
-            var options = {
-                url: getApiPath('/foo')
-            };
             var fn = function () {
-                request(options);
+                request(getApiPath('/foo'));
             };
             expect(fn).not.toThrowError();
         });
         it('responds with headers as an object literal', function (done) {
-            var options = {
-                url: getApiPath('/not-found')
-            };
-            request(options, function (response) {
-                expect(isPlainObject(response.headers)).toBe(true);
-                done();
+            request(getApiPath('/not-found'), {
+                onResponse: function (response) {
+                    expect(isPlainObject(response.headers)).toBe(true);
+                    done();
+                }
             });
         });
         it('rejects a client error', function (done) {
-            var options = {
-                url: 'http://foo.bar.baz/qux'
-            };
-            request(options, noop, function (err) {
-                expect(err instanceof Error).toBe(true);
-                expect(err.method).toEqual('GET');
-                expect(err.url).toEqual('http://foo.bar.baz/qux');
-                done();
+            request('http://foo.bar.baz/qux', {
+                onClientError: function (error) {
+                    expect(error instanceof Error).toBe(true);
+                    expect(error.method).toEqual('GET');
+                    expect(error.url).toEqual('http://foo.bar.baz/qux');
+                    done();
+                }
             });
         });
     }
     TestUtils.runIsomorphicTests = runIsomorphicTests;
     var FakeHttp;
     (function (FakeHttp) {
-        function request(options, resolve, reject) {
-            return new Agent(options).send(resolve, reject);
+        function request(url, options) {
+            return new Agent(url, options);
         }
         FakeHttp.request = request;
         var Agent = (function (_super) {
@@ -138,20 +209,11 @@ var TestUtils;
             function Agent() {
                 _super.apply(this, arguments);
             }
-            Agent.prototype.send = function (resolve, reject) {
-                this.resolve = resolve;
-                this.reject = reject;
-                return this;
-            };
             Agent.prototype.respondWith = function (response) {
-                if (typeof this.resolve === 'function') {
-                    this.resolve(response);
-                }
+                this.onResponse(response);
             };
-            Agent.prototype.rejectWith = function (err) {
-                if (typeof this.reject === 'function') {
-                    this.reject(this.addRequestInfo(err));
-                }
+            Agent.prototype.errorWith = function (error) {
+                this.onError(error);
             };
             return Agent;
         })(IsoHttp.Agent);
@@ -160,7 +222,4 @@ var TestUtils;
 })(TestUtils || (TestUtils = {}));
 module.exports = TestUtils;
 
-},{"../IsoHttp":1}],"iso-http/fake":[function(require,module,exports){
-module.exports = require('./js/test/TestUtils').FakeHttp;
-
-},{"./js/test/TestUtils":2}]},{},[]);
+},{"../IsoHttp":2}]},{},[]);

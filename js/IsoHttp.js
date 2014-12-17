@@ -1,49 +1,71 @@
+var _ = require('./Helpers');
 var IsoHttp;
 (function (IsoHttp) {
     var Agent = (function () {
-        function Agent(options) {
-            this.headers = {};
-            if (!options || !Object.keys(options).length) {
-                throw new Error('Missing options.');
+        function Agent(url, options) {
+            this.url = url;
+            this.hasErrors = false;
+            this.nullResponse = {
+                status: 0,
+                headers: {},
+                text: ''
+            };
+            options = options || {};
+            this.onClientError = this.wrapClientErrorCallback(options.onClientError);
+            this.onResponse = this.wrapResponseCallback(options.onResponse);
+            try {
+                this.validateRequest(options);
+                this.method = (options.method || 'GET').toUpperCase();
+                this.headers = options.headers || {};
+                this.withCredentials = !!options.withCredentials;
+                this.data = options.data || {};
             }
-            if (!options.url) {
-                throw new Error('Missing required option: url.');
+            catch (error) {
+                this.onError(error);
             }
-            this.url = options.url;
-            this.method = (options.method || 'GET').toUpperCase();
-            if (options.headers) {
-                this.setHeaders(options.headers);
-            }
-            if (options.contentType) {
-                this.contentType = options.contentType;
-            }
-            this.withCredentials = options.withCredentials || false;
-            this.data = options.data || {};
         }
-        Object.defineProperty(Agent.prototype, "contentType", {
-            get: function () {
-                return this.headers['content-type'];
-            },
-            set: function (value) {
-                this.headers['content-type'] = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Agent.prototype.setHeaders = function (headers) {
+        Agent.prototype.wrapClientErrorCallback = function (onClientError) {
+            return this.wrapTryCatch(onClientError || _.noop, _.noop);
+        };
+        Agent.prototype.wrapTryCatch = function (tryFunction, onCatch) {
             var _this = this;
-            Object.keys(headers).forEach(function (fieldName) {
-                _this.headers[fieldName] = headers[fieldName];
-            });
+            return function () {
+                try {
+                    tryFunction.apply(_this, arguments);
+                }
+                catch (err) {
+                    onCatch(err);
+                }
+            };
         };
-        Agent.prototype.send = function (resolve, reject) {
-            throw new Error('Not implemented.');
+        Agent.prototype.wrapResponseCallback = function (onResponse) {
+            onResponse = onResponse || _.noop;
+            return this.wrapTryCatch(function (response) {
+                response.headers = _.lowercaseKeys(response.headers);
+                onResponse(response);
+            }, this.onError);
         };
-        Agent.prototype.addRequestInfo = function (err) {
-            var result = err;
-            result.method = this.method;
-            result.url = this.url;
-            return result;
+        Agent.prototype.onError = function (error) {
+            this.hasErrors = true;
+            if (!error) {
+                error = new Error();
+            }
+            error.url = this.url;
+            error.method = this.method;
+            if (error.message) {
+                error.message = 'iso-http: ' + error.message;
+            }
+            else {
+                error.message = 'Unknown error in iso-http module.';
+            }
+            this.onClientError(error);
+            this.onResponse(this.nullResponse);
+        };
+        Agent.prototype.validateRequest = function (options) {
+            _.assert(this.url, 'Null or undefined URL in request.');
+            _.assert(_.isPlainObject(options), 'Request options must be a plain object.');
+            _.assert(_.isFunction(this.onResponse), 'Response callback must be a function.');
+            _.assert(_.isFunction(this.onClientError), 'Client error callback must be a function.');
         };
         return Agent;
     })();
