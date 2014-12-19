@@ -21,7 +21,7 @@ var IsoHttp;
                 this.validateRequest(options);
                 this.method = (options.method || 'GET').toUpperCase();
                 this.headers = options.headers || {};
-                this.withCredentials = !!options.withCredentials;
+                this.crossDomain = !!options.crossDomain;
                 this.data = options.data || {};
             }
             catch (error) {
@@ -47,7 +47,7 @@ var IsoHttp;
             return this.wrapTryCatch(function (response) {
                 response.headers = _.lowercaseKeys(response.headers);
                 onResponse(response);
-            }, this.onError);
+            }, this.onError.bind(this));
         };
         Agent.prototype.onError = function (error) {
             this.hasErrors = true;
@@ -172,11 +172,10 @@ var TestUtils;
                 });
             });
         });
-        it('handles a 200 w/o a resolve callback', function () {
-            var fn = function () {
+        it('handles a 200 w/o a response callback', function () {
+            expect(function () {
                 request(getApiPath('/foo'));
-            };
-            expect(fn).not.toThrowError();
+            }).not.toThrowError();
         });
         it('responds with headers as an object literal', function (done) {
             request(getApiPath('/not-found'), {

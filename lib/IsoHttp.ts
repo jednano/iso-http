@@ -10,7 +10,7 @@ module IsoHttp {
 		method?: string;
 		headers?: any;
 		data?: any;
-		withCredentials?: boolean;
+		crossDomain?: boolean;
 		onResponse?: ResponseCallback;
 		onClientError?: ClientErrorCallback;
 	}
@@ -38,7 +38,7 @@ module IsoHttp {
 
 		protected method: string;
 		protected headers: any;
-		protected withCredentials: boolean;
+		protected crossDomain: boolean;
 		protected data: any;
 		protected onResponse: ResponseCallback;
 		protected onClientError: ClientErrorCallback;
@@ -57,7 +57,7 @@ module IsoHttp {
 				this.validateRequest(options);
 				this.method = (options.method || 'GET').toUpperCase();
 				this.headers = options.headers || {};
-				this.withCredentials = !!options.withCredentials;
+				this.crossDomain = !!options.crossDomain;
 				this.data = options.data || {};
 			} catch (error) {
 				this.onError(error);
@@ -86,7 +86,7 @@ module IsoHttp {
 			return this.wrapTryCatch((response: Response) => {
 				response.headers = _.lowercaseKeys(response.headers);
 				onResponse(response);
-			}, this.onError);
+			}, this.onError.bind(this));
 		}
 
 		protected onError(error?: any) {

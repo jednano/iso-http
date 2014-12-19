@@ -6,7 +6,7 @@ declare module IsoHttp {
         method?: string;
         headers?: any;
         data?: any;
-        withCredentials?: boolean;
+        crossDomain?: boolean;
         onResponse?: ResponseCallback;
         onClientError?: ClientErrorCallback;
     }
@@ -29,7 +29,7 @@ declare module IsoHttp {
         protected url: string;
         protected method: string;
         protected headers: any;
-        protected withCredentials: boolean;
+        protected crossDomain: boolean;
         protected data: any;
         protected onResponse: ResponseCallback;
         protected onClientError: ClientErrorCallback;

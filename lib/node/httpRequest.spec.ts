@@ -4,7 +4,7 @@
 import httpRequest = require('./httpRequest');
 import TestUtils = require('../test/TestUtils');
 
-describe('NodeHttp.request()', () => {
+describe('node httpRequest()', () => {
 
 	TestUtils.runIsomorphicTests(httpRequest);
 

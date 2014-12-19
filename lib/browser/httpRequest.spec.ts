@@ -3,7 +3,7 @@
 import httpRequest = require('./httpRequest');
 import TestUtils = require('../test/TestUtils');
 
-describe('BrowserHttp.request()', () => {
+describe('browser httpRequest()', () => {
 
 	TestUtils.runIsomorphicTests(httpRequest);
 

@@ -41,11 +41,10 @@ var TestUtils;
                 });
             });
         });
-        it('handles a 200 w/o a resolve callback', function () {
-            var fn = function () {
+        it('handles a 200 w/o a response callback', function () {
+            expect(function () {
                 request(getApiPath('/foo'));
-            };
-            expect(fn).not.toThrowError();
+            }).not.toThrowError();
         });
         it('responds with headers as an object literal', function (done) {
             request(getApiPath('/not-found'), {

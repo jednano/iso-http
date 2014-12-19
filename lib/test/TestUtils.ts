@@ -39,11 +39,10 @@ module TestUtils {
 			});
 		});
 
-		it('handles a 200 w/o a resolve callback', () => {
-			var fn = () => {
+		it('handles a 200 w/o a response callback', () => {
+			expect(() => {
 				request(getApiPath('/foo'));
-			};
-			expect(fn).not.toThrowError();
+			}).not.toThrowError();
 		});
 
 		it('responds with headers as an object literal', done => {

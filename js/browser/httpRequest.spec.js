@@ -1,7 +1,7 @@
 /// <reference path="../../bower_components/dt-jasmine/jasmine.d.ts" />
 var httpRequest = require('./httpRequest');
 var TestUtils = require('../test/TestUtils');
-describe('BrowserHttp.request()', function () {
+describe('browser httpRequest()', function () {
     TestUtils.runIsomorphicTests(httpRequest);
     it('rejects a client error', function (done) {
         httpRequest('http://foo.bar.baz/qux', {

@@ -15,7 +15,7 @@ An HTTP request library that enables isomorphic applications.
 
 - [Enables Isomorphic Applications &ndash; runs on Node and in-browser with the same interface!](#enables-isomorphic-applications)
 - [100% test coverage with 4.0 Code Climate GPA](#full-test-coverage)
-- Zero dependencies
+- Zero runtime dependencies
 - Small footprint &ndash; 4KB (minified) / 2KB (gzipped)
 - [FakeHttp module for testing](#fake-http-module-for-testing)
 - [TypeScript source &ndash; definitions are free!](#typescript-source)
@@ -67,7 +67,7 @@ export interface RequestOptions {
 	method?: string;
 	headers?: any;
 	data?: any;
-	withCredentials?: boolean;
+	crossDomain?: boolean;
 	onResponse?: ResponseCallback;
 	onClientError?: ClientErrorCallback;
 }
