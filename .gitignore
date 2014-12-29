@@ -1,6 +1,7 @@
 d.ts/**/*.spec.d.ts
 d.ts/test/
 dist/test-utils.js
+*.suo
 
 # Logs
 logs
