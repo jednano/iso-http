@@ -10,6 +10,14 @@ describe('NodeHttp.request()', () => {
 
 	TestUtils.runIsomorphicTests(request);
 
+	it('handles a 404', done => {
+		request({ url: TestUtils.getApiPath('/404') }, response => {
+			expect(response.status).toEqual(404);
+			expect(response.text).toEqual('Cannot GET /404\n');
+			done();
+		});
+	});
+
 	it('rejects a client error', done => {
 		var options = {
 			url: 'http://foo.bar.baz/qux'

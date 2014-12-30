@@ -9,6 +9,14 @@ describe('BrowserHttp.request()', () => {
 
 	TestUtils.runIsomorphicTests(request);
 
+	it('handles a 404', done => {
+		request({ url: 'http://localhost:9876/404' }, response => {
+			expect(response.status).toEqual(404);
+			expect(response.text).toEqual('NOT FOUND');
+			done();
+		});
+	});
+
 	it('rejects a client error', done => {
 		var options = {
 			url: 'http://foo.bar.baz/qux'

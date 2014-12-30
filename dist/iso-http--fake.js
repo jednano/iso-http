@@ -82,8 +82,7 @@ var TestUtils;
     function runIsomorphicTests(request) {
         var statusCodes = {
             200: 'foo',
-            500: 'fail',
-            404: 'Cannot GET /404\n'
+            500: 'fail'
         };
         Object.keys(statusCodes).forEach(function (status) {
             it('handles a ' + status, function (done) {
