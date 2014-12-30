@@ -85,14 +85,13 @@ var TestUtils;
             500: 'fail',
             404: 'Cannot GET /404\n'
         };
-        Object.keys(statusCodes).forEach(function (statusCode) {
-            var status = parseInt(statusCode, 10);
+        Object.keys(statusCodes).forEach(function (status) {
             it('handles a ' + status, function (done) {
                 var options = {
                     url: getApiPath('/' + status)
                 };
                 request(options, function (response) {
-                    expect(response.status).toEqual(status);
+                    expect(response.status).toEqual(parseInt(status, 10));
                     expect(response.text).toEqual(statusCodes[status]);
                     done();
                 });

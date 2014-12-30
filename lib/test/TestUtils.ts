@@ -27,14 +27,13 @@ module TestUtils {
 			500: 'fail',
 			404: 'Cannot GET /404\n'
 		};
-		Object.keys(statusCodes).forEach(statusCode => {
-			var status = parseInt(statusCode, 10);
+		Object.keys(statusCodes).forEach(status => {
 			it('handles a ' + status, done => {
 				var options = {
 					url: getApiPath('/' + status)
 				};
 				request(options, response => {
-					expect(response.status).toEqual(status);
+					expect(response.status).toEqual(parseInt(status, 10));
 					expect(response.text).toEqual(statusCodes[status]);
 					done();
 				});

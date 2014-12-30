@@ -33,7 +33,7 @@ var Http;
                 if (xhr.readyState !== 4) {
                     return;
                 }
-                if (xhr.status === 0) {
+                if (xhr.status === 0 && typeof reject === 'function') {
                     reject(_this.addRequestInfo(new Error('Unspecified client error.')));
                     return;
                 }
