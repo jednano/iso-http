@@ -20,4 +20,25 @@ describe('BrowserHttp.request()', function () {
             done();
         });
     });
+    describe('a cross-domain request', function () {
+        it('handles a credentialed request', function (done) {
+            request({
+                url: TestUtils.getApiPath('/creds'),
+                withCredentials: true
+            }, function (response) {
+                expect(response.status).toEqual(200);
+                expect(response.text).toEqual('foo');
+                done();
+            });
+        });
+        it('handles a failure', function (done) {
+            request({
+                url: '//tunne127.com'
+            }, function (response) {
+                expect(response.status).toEqual(0);
+                expect(response.text).toEqual('');
+                done();
+            });
+        });
+    });
 });

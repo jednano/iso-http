@@ -27,4 +27,29 @@ describe('BrowserHttp.request()', () => {
 		});
 	});
 
+	describe('a cross-domain request', () => {
+
+		it('handles a credentialed request', done => {
+			request({
+				url: TestUtils.getApiPath('/creds'),
+				withCredentials: true
+			}, response => {
+				expect(response.status).toEqual(200);
+				expect(response.text).toEqual('foo');
+				done();
+			});
+		});
+
+		it('handles a failure', done => {
+			request({
+				url: '//tunne127.com'
+			}, response => {
+				expect(response.status).toEqual(0);
+				expect(response.text).toEqual('');
+				done();
+			});
+		});
+
+	});
+
 });

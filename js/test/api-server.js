@@ -11,6 +11,14 @@ app.options('/500', cors());
 app.get('/500', cors(), function (request, response) {
     response.status(500).send('fail');
 });
+var corsMiddleware = cors({
+    origin: true,
+    credentials: true
+});
+app.options('/creds', corsMiddleware);
+app.get('/creds', corsMiddleware, function (request, response) {
+    response.status(200).send('foo');
+});
 var server = app.listen(3000, function () {
     console.log('Test server listening on port %d', server.address().port);
 });
