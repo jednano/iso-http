@@ -9,7 +9,7 @@ describe('node httpRequest()', () => {
 	TestUtils.runIsomorphicTests(httpRequest);
 
 	it('handles a 404', done => {
-		request({ url: TestUtils.getApiPath('/404') }, response => {
+		httpRequest(TestUtils.getApiPath('/404'), response => {
 			expect(response.status).toEqual(404);
 			expect(response.text).toEqual('Cannot GET /404\n');
 			done();

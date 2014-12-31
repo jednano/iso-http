@@ -49,6 +49,9 @@ var Agent = (function (_super) {
         this.request.on('error', this.onError.bind(this));
     };
     Agent.prototype.send = function () {
+        if (this.hasErrors) {
+            return;
+        }
         this.request.end();
     };
     return Agent;

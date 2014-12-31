@@ -4,6 +4,13 @@ var httpRequest = require('./httpRequest');
 var TestUtils = require('../test/TestUtils');
 describe('node httpRequest()', function () {
     TestUtils.runIsomorphicTests(httpRequest);
+    it('handles a 404', function (done) {
+        httpRequest(TestUtils.getApiPath('/404'), function (response) {
+            expect(response.status).toEqual(404);
+            expect(response.text).toEqual('Cannot GET /404\n');
+            done();
+        });
+    });
     it('rejects a client error', function (done) {
         httpRequest('http://foo.bar.baz/qux', {
             onClientError: function (error) {

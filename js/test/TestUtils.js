@@ -34,7 +34,7 @@ var TestUtils;
                 var url = getApiPath('/' + status);
                 request(url, {
                     onResponse: function (response) {
-                        expect(response.status).toEqual(status);
+                        expect(response.status).toEqual(parseInt(status, 10));
                         expect(response.text).toEqual(statusCodes[status]);
                         done();
                     }

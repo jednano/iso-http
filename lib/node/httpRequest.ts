@@ -48,6 +48,9 @@ class Agent extends IsoHttp.Agent {
 	}
 
 	send() {
+		if (this.hasErrors) {
+			return;
+		}
 		this.request.end();
 	}
 
