@@ -85,6 +85,15 @@ interface Response {
 ```
 
 
+##### Browser Usage
+
+You can require the browser package like so:
+
+```js
+var http = require('iso-http/browser');
+```
+
+
 ### Full test coverage
 
 Tests are written in [Jasmine](http://jasmine.github.io/) to cover all library source code. Code coverage reports are generated with [Istanbul](http://gotwarlost.github.io/istanbul/) and sent to [Code Climate](https://codeclimate.com/github/jedmao/iso-http) for further code quality analysis. Browser tests are run with [Karma](http://karma-runner.github.io/).
