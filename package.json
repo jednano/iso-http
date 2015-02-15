@@ -1,6 +1,6 @@
 {
   "name": "iso-http",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An HTTP request library that enables isomorphic applications.",
   "main": "js/node/Http.js",
   "scripts": {
