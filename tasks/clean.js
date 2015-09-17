@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var del = require('del');
 
 module.exports = function() {
-	gulp.task('clean', function(done) {
-		del(['js', 'd.ts'], done);
+	gulp.task('clean', function() {
+		return del(['js', 'd.ts']);
 	});
 };
