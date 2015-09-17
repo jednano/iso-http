@@ -17,7 +17,7 @@ describe('NodeHttp.request()', function () {
             url: 'http://foo.bar.baz/qux'
         };
         request(options, TestUtils.noop, function (err) {
-            expect(err.message).toEqual('getaddrinfo ENOTFOUND foo.bar.baz');
+            expect(err.message).toMatch(/getaddrinfo ENOTFOUND foo.bar.baz/);
             done();
         });
     });

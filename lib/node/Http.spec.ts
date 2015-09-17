@@ -23,7 +23,7 @@ describe('NodeHttp.request()', () => {
 			url: 'http://foo.bar.baz/qux'
 		};
 		request(options, TestUtils.noop, err => {
-			expect(err.message).toEqual('getaddrinfo ENOTFOUND foo.bar.baz');
+			expect(err.message).toMatch(/getaddrinfo ENOTFOUND foo.bar.baz/);
 			done();
 		});
 	});
